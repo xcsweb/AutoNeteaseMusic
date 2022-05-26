@@ -23,8 +23,8 @@ def protect(text):
 
 s=requests.Session()
 header={}
-url="https://music.163.com/weapi/login/cellphone"
-url2="https://music.163.com/weapi/point/dailyTask"
+url="https://music.163.com/api/point/dailyTask?type=0"
+url2="https://music.163.com/api/point/dailyTask?type=1"
 url3="https://music.163.com/weapi/v1/discovery/recommend/resource"
 logindata={
     "phone":input(),
