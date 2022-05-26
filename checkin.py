@@ -23,36 +23,24 @@ def protect(text):
 
 s=requests.Session()
 header={}
-url="https://music.163.com/api/point/dailyTask?type=0"
-url2="https://music.163.com/api/point/dailyTask?type=1"
+url="https://music.163.com/weapi/login/cellphone"
+url2="https://music.163.com/weapi/point/dailyTask"
 url3="https://music.163.com/weapi/v1/discovery/recommend/resource"
-logindata={
-    "phone":input(),
-    "countrycode":"86",
-    "password":md5(input()),
-    "rememberLogin":"true",
-}
+cookie=input()
+tempcookie=input()
 headers = {
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36',
-        "Referer" : "http://music.163.com/",
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36',
         "Accept-Encoding" : "gzip, deflate",
+        "Origin": "https://music.163.com",
+        "Referer": "https://music.163.com/discover",
+        "Cookie":cookie
         }
 headers2 = {
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36',
-        "Referer" : "http://music.163.com/",
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36',
+        "referer" : "http://music.163.com/",
         "Accept-Encoding" : "gzip, deflate",
-        "Cookie":"os=pc; osver=Microsoft-Windows-10-Professional-build-10586-64bit; appver=2.0.3.131777; channel=netease; __remember_me=true;"
+        "Cookie":cookie
         }
-
-res=s.post(url=url,data=protect(json.dumps(logindata)),headers=headers2)
-tempcookie=res.cookies
-object=json.loads(res.text)
-if object['code']==200:
-    print("登录成功！")
-else:
-    print("登录失败！请检查密码是否正确！"+str(object['code']))
-    exit(object['code'])
-
 res=s.post(url=url2,data=protect('{"type":0}'),headers=headers)
 object=json.loads(res.text)
 if object['code']!=200 and object['code']!=-2:
@@ -63,15 +51,14 @@ else:
     else:
         print("重复签到")
 
-
-res=s.post(url=url3,data=protect('{"csrf_token":"'+requests.utils.dict_from_cookiejar(tempcookie)['__csrf']+'"}'),headers=headers)
+res=s.post(url=url3,data=protect('{"csrf_token":"'+tempcookie+'"}'),headers=headers)
 object=json.loads(res.text,strict=False)
 for x in object['recommend']:
-    url='https://music.163.com/weapi/v3/playlist/detail?csrf_token='+requests.utils.dict_from_cookiejar(tempcookie)['__csrf']
+    url='https://music.163.com/weapi/v3/playlist/detail?csrf_token='+tempcookie
     data={
         'id':x['id'],
         'n':1000,
-        'csrf_token':requests.utils.dict_from_cookiejar(tempcookie)['__csrf'],
+        'csrf_token':tempcookie,
     }
     res=s.post(url,protect(json.dumps(data)),headers=headers)
     object=json.loads(res.text,strict=False)
