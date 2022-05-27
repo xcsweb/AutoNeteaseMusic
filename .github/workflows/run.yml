@@ -32,5 +32,6 @@ jobs:
         ${CSRFTOKEN}
         EOF
         JUEJINCOOKIE='${{ secrets.JUEJINCOOKIE }}'
+        chmod 777 ./juejin.sh
         ./juejin.sh JUEJINCOOKIE
         echo "掘金签到成功"
