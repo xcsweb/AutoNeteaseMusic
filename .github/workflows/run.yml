@@ -31,3 +31,5 @@ jobs:
         ${COOKIE}
         ${CSRFTOKEN}
         EOF
+        ./juejin.sh JUEJINCOOKIE
+        echo "掘金签到成功"
